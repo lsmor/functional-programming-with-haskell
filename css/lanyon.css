@@ -149,12 +149,13 @@ h1, h2, h3, h4, h5, h6 {
   visibility: hidden;
   overflow-y: auto;
   font-family: "PT Sans", Helvetica, Arial, sans-serif;
-  font-size: .875rem; /* 15px */
+  font-size: .875rem; 
   color: rgba(255,255,255,.6);
   background-color: #202020;
   -webkit-transition: all .3s ease-in-out;
           transition: all .3s ease-in-out;
 }
+
 @media (min-width: 30em) {
   .sidebar {
     font-size: .75rem; /* 14px */
@@ -166,6 +167,34 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
   color: #fff;
 }
+
+/* button must repeat values inhered from .sidebar
+otherwise user agent style overwrites it... wft??
+*/
+.sidebar button {
+  font-weight: normal;
+  color: #fff;
+  appearance: auto;
+  font-family: "PT Sans", Helvetica, Arial, sans-serif;
+  font-size: .875rem; /* 15px */
+  background-color: #202020;
+  border: 0px solid rgba(255,255,255,.1);
+  width: 100%;
+  text-align: left;
+}
+
+@media (min-width: 30em) {
+  .sidebar button {
+    font-size: .75rem; /* 14px */
+  }
+}
+
+
+
+.dropdown-container {
+  display: none;
+}
+
 .sidebar-item {
   padding: 1rem;
 }
@@ -177,24 +206,31 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar-nav {
   border-bottom: 1px solid rgba(255,255,255,.1);
 }
-.sidebar-nav-item {
+.sidebar-nav-item, .sidebar-nav-button {
   display: block;
   padding: .5rem 1rem;
   border-top: 1px solid rgba(255,255,255,.1);
 }
+
 .sidebar-nav-item.active,
 a.sidebar-nav-item:hover,
+button.sidebar-nav-button:hover,
 a.sidebar-nav-item:focus {
   text-decoration: none;
   background-color: rgba(255,255,255,.1);
   border-color: transparent;
 }
 
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  padding-left: 10px;
+}
+
 @media (min-width: 48em) {
   .sidebar-item {
     padding: 1.5rem;
   }
-  .sidebar-nav-item {
+  .sidebar-nav-item, .sidebar-nav-button {
     padding-left:  1.5rem;
     padding-right: 1.5rem;
   }

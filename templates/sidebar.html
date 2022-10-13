@@ -11,6 +11,14 @@
   <nav class="sidebar-nav">
     <a class="sidebar-nav-item$if(home)$ active$endif$" href="$baseurl$">Home</a>
 
+    <button class="sidebar-nav-button" id="chapter-list">Blogs<i class="fa fa-caret-down"></i></button>
+    
+    <div class="dropdown-container">
+      $for(list_posts)$
+        <a class="sidebar-nav-item$if(eval(title))$ active$endif$" href="$node-url$">$title$</a>
+      $endfor$
+    </div>
+
     <!--- The code below dynamically generates a sidebar nav of the files in the folder /pages -->
 
     $for(list_pages)$

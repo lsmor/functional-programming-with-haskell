@@ -3,3 +3,4 @@ _cache/
 _site/
 stack.yaml.lock
 templates/_cache/
+dist-newstyle
