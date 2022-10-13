@@ -1,22 +1,22 @@
-<div class="post">
-    <h1 class="post-title">
+<div class="chapter">
+    <h1 class="chapter-title">
       <a href="$url$">
         $title$
       </a>
     </h1>
-    <span class="post-date">$date$,
+    <span class="chapter-date">$date$,
       $if(author)$
-         Posted by $author$
+         Chaptered by $author$
       $endif$
     </span>
      $body$
 </div>
 
-$if(related_posts)$
+$if(related_chapters)$
 <div class="related">
-  <h2>Related posts</h2>
-  <ul class="related-posts">
-      $for(related_posts)$
+  <h2>Related chapters</h2>
+  <ul class="related-chapters">
+      $for(related_chapters)$
       <li>
         <h3>
           <a href="$url$">

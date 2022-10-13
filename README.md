@@ -5,10 +5,10 @@ for Haskell-based static site generator [Hakyll](https://jaspervdj.be/hakyll/) o
 
 Few Remarks:
 
-- The code for displaying related post is a modified version based on [the blog post by Matthew Fitzsimmons](https://www.fitzsimmons.io/posts/tricks-with-tags-in-hakyll).
-The original version of Lanyon displays only related posts not tags and the port is following the same.
+- The code for displaying related chapter is a modified version based on [the blog chapter by Matthew Fitzsimmons](https://www.fitzsimmons.io/chapters/tricks-with-tags-in-hakyll).
+The original version of Lanyon displays only related chapters not tags and the port is following the same.
 - The pagination code is a modified version of [the code by Mike Limansky](https://github.com/limansky/limansky_me/blob/master/src/site.hs).
-- The dynamic sidebar activation is explained in my [blog post](https://heuna-kim.net/posts/2020-11-19-Hakyll-Sidebar-Activation.html).
+- The dynamic sidebar activation is explained in my [blog chapter](https://heuna-kim.net/chapters/2020-11-19-Hakyll-Sidebar-Activation.html).
 - Syntax highlighting is slightly different from the original Lanyon; this repository is using the standard syntax highlighting for Hakyll conforming with `Pandoc` compiler.
 
 ### Previews
@@ -65,9 +65,9 @@ baseCtx =
 
 You can keep the `baseurl` field for debugging purposes or viewing the site on your local computer but when you publish it, you will need to change it to the domain address of your website.
 
-#### Pages and posts
+#### Pages and chapters
 All your files in the `pages` folder will be compiled, listed in the sidebar in an alphabetical order and displayed upon clicking them.
-All your markdown files in the `posts` folder will be compiled, displayed in the home/index page with the pagination and also listed in the archive page.
+All your markdown files in the `chapters` folder will be compiled, displayed in the home/index page with the pagination and also listed in the archive page.
 
 #### Color setting
 As in the original theme, add your favorite color theme to the `<body>` element in the `templates/default.html` file, for example:

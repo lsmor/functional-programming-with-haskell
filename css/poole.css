@@ -22,7 +22,7 @@
  * Messages
  * Container
  * Masthead
- * Posts and pages
+ * Chapters and pages
  * Pagination
  * Reverse layout
  * Themes
@@ -327,58 +327,58 @@ tbody tr:nth-child(odd) th {
 
 
 /*
- * Posts and pages
+ * Chapters and pages
  *
- * Each post is wrapped in `.post` and is used on default and post layouts. Each
+ * Each chapter is wrapped in `.chapter` and is used on default and chapter layouts. Each
  * page is wrapped in `.page` and is only used on the page layout.
  */
 
 .page,
-.post {
+.chapter {
   margin-bottom: 4em;
 }
 
-/* Blog post or page title */
+/* Blog chapter or page title */
 .page-title,
-.post-title,
-.post-title a {
+.chapter-title,
+.chapter-title a {
   color: #303030;
 }
 .page-title,
-.post-title {
+.chapter-title {
   margin-top: 0;
 }
 
-/* Meta data line below post title */
-.post-date {
+/* Meta data line below chapter title */
+.chapter-date {
   display: block;
   margin-top: -.5rem;
   margin-bottom: 1rem;
   color: #9a9a9a;
 }
 
-/* Related posts */
+/* Related chapters */
 .related {
   padding-top: 2rem;
   padding-bottom: 2rem;
   border-top: 1px solid #eee;
 }
-.related-posts {
+.related-chapters {
   padding-left: 0;
   list-style: none;
 }
-.related-posts h3 {
+.related-chapters h3 {
   margin-top: 0;
 }
-.related-posts li small {
+.related-chapters li small {
   font-size: 75%;
   color: #999;
 }
-.related-posts li a:hover {
+.related-chapters li a:hover {
   color: #268bd2;
   text-decoration: none;
 }
-.related-posts li a:hover small {
+.related-chapters li a:hover small {
   color: inherit;
 }
 
@@ -387,7 +387,7 @@ tbody tr:nth-child(odd) th {
  * Pagination
  *
  * Super lightweight (HTML-wise) blog pagination. `span`s are provide for when
- * there are no more previous or next posts to show.
+ * there are no more previous or next chapters to show.
  */
 
 .pagination {

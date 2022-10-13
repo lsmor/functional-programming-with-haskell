@@ -40,32 +40,32 @@ main = Hakyll.hakyll $ do
                 >>= Hakyll.loadAndApplyTemplate "templates/default.html" (activeSidebarCtx <> siteCtx)
                 >>= Hakyll.relativizeUrls
 
-    tags <- Hakyll.buildTags "posts/*" (Hakyll.fromCapture "tags/*.html")
+    tags <- Hakyll.buildTags "chapters/*" (Hakyll.fromCapture "tags/*.html")
 
-    Hakyll.match "posts/*" $ Hakyll.version "meta" $ do
+    Hakyll.match "chapters/*" $ Hakyll.version "meta" $ do
         Hakyll.route   $ Hakyll.setExtension "html"
         Hakyll.compile Hakyll.getResourceBody
 
-    Hakyll.match "posts/*" $ do
+    Hakyll.match "chapters/*" $ do
         Hakyll.route $ Hakyll.setExtension "html"
         Hakyll.compile $ do
-            posts <- Hakyll.loadAll ("posts/*" Hakyll..&&. Hakyll.hasVersion "meta")
-            let taggedPostCtx = Hakyll.tagsField "tags" tags `mappend`
-                                postCtx `mappend`
-                                relatedPostsCtx posts 3
+            chapters <- Hakyll.loadAll ("chapters/*" Hakyll..&&. Hakyll.hasVersion "meta")
+            let taggedChapterCtx = Hakyll.tagsField "tags" tags `mappend`
+                                chapterCtx `mappend`
+                                relatedChaptersCtx chapters 3
 
             Hakyll.pandocCompiler
                 >>= Hakyll.saveSnapshot "content"
-                >>= Hakyll.loadAndApplyTemplate "templates/post.html" taggedPostCtx
+                >>= Hakyll.loadAndApplyTemplate "templates/chapter.html" taggedChapterCtx
                 >>= Hakyll.loadAndApplyTemplate "templates/default.html" (baseSidebarCtx <> siteCtx)
                 >>= Hakyll.relativizeUrls
 
     Hakyll.create ["archive.html"] $ do
         Hakyll.route Hakyll.idRoute
         Hakyll.compile $ do
-            posts <- Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("posts/*" Hakyll..&&. Hakyll.hasNoVersion) "content"
+            chapters <- Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("chapters/*" Hakyll..&&. Hakyll.hasNoVersion) "content"
             let archiveCtx =
-                    Hakyll.listField "posts" postCtx (return posts) `mappend`
+                    Hakyll.listField "chapters" chapterCtx (return chapters) `mappend`
                     Hakyll.constField "title" "Archive"             `mappend`
                     Hakyll.constField "archive" ""                  `mappend`
                     siteCtx
@@ -75,16 +75,16 @@ main = Hakyll.hakyll $ do
                 >>= Hakyll.loadAndApplyTemplate "templates/default.html" (baseSidebarCtx <> archiveCtx)
                 >>= Hakyll.relativizeUrls
 
-    paginate <- Hakyll.buildPaginateWith postsGrouper "posts/*" postsPageId
+    paginate <- Hakyll.buildPaginateWith chaptersGrouper "chapters/*" chaptersPageId
 
     Hakyll.paginateRules paginate $ \page pattern -> do
         Hakyll.route Hakyll.idRoute
         Hakyll.compile $ do
-            posts <- Hakyll.recentFirst =<< Hakyll.loadAllSnapshots (pattern Hakyll..&&. Hakyll.hasNoVersion) "content"
+            chapters <- Hakyll.recentFirst =<< Hakyll.loadAllSnapshots (pattern Hakyll..&&. Hakyll.hasNoVersion) "content"
             let indexCtx =
                     Hakyll.constField "title" (if page == 1 then "Home"
-                                                     else "Blog posts, page " ++ show page) `mappend`
-                    Hakyll.listField "posts" postCtx (return posts) `mappend`
+                                                     else "Blog chapters, page " ++ show page) `mappend`
+                    Hakyll.listField "chapters" chapterCtx (return chapters) `mappend`
                     Hakyll.constField "home" "" `mappend`
                     Hakyll.paginateContext paginate page `mappend`
                     siteCtx
@@ -100,18 +100,18 @@ main = Hakyll.hakyll $ do
     Hakyll.create ["atom.xml"] $ do
         Hakyll.route Hakyll.idRoute
         Hakyll.compile $ do
-            let feedCtx = postCtx `mappend`
+            let feedCtx = chapterCtx `mappend`
                     Hakyll.bodyField "description"
-            posts <- fmap (take 10) . Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("posts/*" Hakyll..&&. Hakyll.hasNoVersion) "content"
-            Hakyll.renderAtom feedConfig feedCtx posts
+            chapters <- fmap (take 10) . Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("chapters/*" Hakyll..&&. Hakyll.hasNoVersion) "content"
+            Hakyll.renderAtom feedConfig feedCtx chapters
 
 --------------------------------------------------------------------------------
 
-postsGrouper :: (Hakyll.MonadMetadata m, MonadFail m) => [Hakyll.Identifier] -> m [[Hakyll.Identifier]]
-postsGrouper = fmap (Hakyll.paginateEvery 3) . Hakyll.sortRecentFirst
+chaptersGrouper :: (Hakyll.MonadMetadata m, MonadFail m) => [Hakyll.Identifier] -> m [[Hakyll.Identifier]]
+chaptersGrouper = fmap (Hakyll.paginateEvery 3) . Hakyll.sortRecentFirst
 
-postsPageId :: Hakyll.PageNumber -> Hakyll.Identifier
-postsPageId n = Hakyll.fromFilePath $ if n == 1 then "index.html" else show n ++ "/index.html"
+chaptersPageId :: Hakyll.PageNumber -> Hakyll.Identifier
+chaptersPageId n = Hakyll.fromFilePath $ if n == 1 then "index.html" else show n ++ "/index.html"
 
 --------------------------------------------------------------------------------
 
@@ -143,8 +143,8 @@ baseCtx =
 
 --------------------------------------------------------------------------------
 
-postCtx :: Hakyll.Context String
-postCtx =
+chapterCtx :: Hakyll.Context String
+chapterCtx =
     Hakyll.dateField "date" "%B %e, %Y" `mappend`
     Hakyll.defaultContext
 
@@ -155,15 +155,15 @@ tagsRulesVersioned tags rules =
             Hakyll.create [Hakyll.tagsMakeId tags tag] $
                 rules tag identifiers
 
-relatedPostsCtx
+relatedChaptersCtx
   :: [Hakyll.Item String]  -> Int  -> Hakyll.Context String
-relatedPostsCtx posts n = Hakyll.listFieldWith "related_posts" postCtx selectPosts
+relatedChaptersCtx chapters n = Hakyll.listFieldWith "related_chapters" chapterCtx selectChapters
   where
     rateItem ts i = length . filter (`elem` ts) <$> Hakyll.getTags (Hakyll.itemIdentifier i)
-    selectPosts s = do
-      postTags <- Hakyll.getTags $ Hakyll.itemIdentifier s
-      let trimmedItems = filter (not . matchPath s) posts
-      take n . reverse <$> sortOnM (rateItem postTags) trimmedItems
+    selectChapters s = do
+      chapterTags <- Hakyll.getTags $ Hakyll.itemIdentifier s
+      let trimmedItems = filter (not . matchPath s) chapters
+      take n . reverse <$> sortOnM (rateItem chapterTags) trimmedItems
 
 matchPath :: Hakyll.Item String -> Hakyll.Item String -> Bool
 matchPath = (==) `on` (Hakyll.toFilePath . Hakyll.itemIdentifier)
@@ -175,7 +175,7 @@ sortOnM f xs = map fst . sortBy (comparing snd) . zip xs <$> mapM f xs
 
 sidebarCtx :: Hakyll.Context String -> Hakyll.Context String
 sidebarCtx nodeCtx =
-    Hakyll.listField "list_posts" nodeCtx (Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("posts/*" Hakyll..&&. Hakyll.hasNoVersion) "content")
+    Hakyll.listField "list_chapters" nodeCtx (Hakyll.recentFirst =<< Hakyll.loadAllSnapshots ("chapters/*" Hakyll..&&. Hakyll.hasNoVersion) "content")
     <> Hakyll.listField "list_pages" nodeCtx (Hakyll.loadAllSnapshots ("pages/*" Hakyll..&&. Hakyll.hasNoVersion) "page-content") 
     <> Hakyll.defaultContext
 
