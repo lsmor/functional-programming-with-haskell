@@ -1,5 +1,5 @@
 ---
-title: Home_md
+title: Home
 ---
 
 Something

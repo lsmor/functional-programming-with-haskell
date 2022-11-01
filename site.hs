@@ -12,7 +12,18 @@ import           System.FilePath               (takeBaseName)
 import           Data.Function (on)
 import qualified Data.Map.Strict               as Map
 
+{-
+ I don't know how Hakyll works and I had a long time tweaking the original Heuna's code to fit my workflow
+ It is very unstable code. For example, uncommenting line 122 causes an error compiling 404.md, which is 
+ completely unrelated (line 32).
+ 
+ Also matching "page/*" makes an infinite loop unless we exclude Home.markdown. 
 
+ Also some rutes has to be manually relativize, which can cause broken links in the future if folder structure
+ changes
+
+ For sure I am doing something wrong but I don't know what. If you are touching this code, be sure you know what you are doing.
+-}
 main :: IO ()
 main = Hakyll.hakyll $ do
     -- Build images and javascript under route _site/images and _site/js
@@ -58,7 +69,7 @@ main = Hakyll.hakyll $ do
     -- The maps are just identifiers, we need to query the compiler with Hakyll.getRoute in order to get the 
     -- destination url of the identifier. 
     -- 
-    -- For some reason that url must be relativize manually despite of relativizeUrls
+    -- For some reason the urls must be relativize manually despite of relativizeUrls
     -- being called afterwards
     Hakyll.match "chapters/*" $ do
         Hakyll.route $ Hakyll.setExtension "html"
@@ -163,6 +174,8 @@ chapterCtx = Hakyll.defaultContext
 sidebarCtx :: Hakyll.Context String -> Hakyll.Context String
 sidebarCtx nodeCtx =
     Hakyll.listField "list_chapters" nodeCtx (Hakyll.loadAllSnapshots ("chapters/*" .&&. Hakyll.hasNoVersion) "content")
+    --                                                                                                         |- dropping this complement pattern, causes Hakyll to loop (maybe) infinitely
+    --                                                                                                         |  Notice that this happens only if line 125 does not match on pages/Home...
     <> Hakyll.listField "list_pages" nodeCtx (Hakyll.loadAllSnapshots ("pages/*" .&&. Hakyll.hasNoVersion .&&. Hakyll.complement "pages/Home.markdown") "page-content")
     <> Hakyll.defaultContext
 

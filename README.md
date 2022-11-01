@@ -16,6 +16,8 @@ This online book is a translation of ["Programación Funcional con Haskell"](htt
 
 Feel free to open an issue if you find a typo or something poorly explained. Spanish speakers can also translate chapters from the [original book](https://jaalonso.github.io/materias/PFconHaskell/temas.html) and submit them.
 
+If you want to change how Hakyll builds the website be sure you explain your changes with **A LOT OF** detail. It has taken me ages to modify Heuna's code and actually I don't know how It is working... small changes has caused Hakyll to get stuck in some kind of infinite loop, and all sort of unexplainable behaviour
+
 ## Building
 
 The project is built with cabal. Use `cabal build` to build an executable called `site`. Then run `cabal exec site rebuild` to actually build the site and `cabal exec site watch` to start a http server capable of hot reloading changes in your markdowns and templates.
