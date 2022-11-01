@@ -160,7 +160,7 @@ siteCtx =
 -- | This context contains the base url.
 baseCtx :: Hakyll.Context a
 baseCtx =
-    Hakyll.constField "baseurl" "http://localhost:8000"
+    Hakyll.constField "baseurl" "https://lsmor.github.io/functional-programming-with-haskell/"
 
 --------------------------------------------------------------------------------
 
