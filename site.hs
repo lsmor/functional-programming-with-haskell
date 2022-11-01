@@ -25,7 +25,7 @@ import qualified Data.Map.Strict               as Map
  For sure I am doing something wrong but I don't know what. If you are touching this code, be sure you know what you are doing.
 -}
 main :: IO ()
-main = Hakyll.hakyll $ do
+main = Hakyll.hakyllWith  Hakyll.defaultConfiguration{ Hakyll.destinationDirectory = "docs"} $ do
     -- Build images and javascript under route _site/images and _site/js
     Hakyll.match ("images/*" .||. "js/*") $ do
         Hakyll.route   Hakyll.idRoute
