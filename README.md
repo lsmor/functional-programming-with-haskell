@@ -4,6 +4,8 @@
 
 This online book is a translation of ["Programación Funcional con Haskell"](https://jaalonso.github.io/materias/PFconHaskell/temas.html) by [José A. Alonso Jiménez](https://jaalonso.github.io/) at University of Seville. It is suitable for students with or without prior knowledge in functional programming or progamming in general.
 
+> Note: The translation might not be 100% accurate as the original book may contain outdated instalation methods or exercises. It is up to Luis Morillo Najarro (lsmor) criteria to adapt the content.
+
 ## Site and Theme
 
 - This book is built with [Hakyll](https://jaspervdj.be/hakyll/) originally written by Jasper Van der Jeugt.
@@ -12,7 +14,7 @@ This online book is a translation of ["Programación Funcional con Haskell"](htt
 
 ## Contributing
 
-Feel free to open an issue if you find a typo or something poorly explained. Spanish speaker can also translate chapters from the [original book](https://jaalonso.github.io/materias/PFconHaskell/temas.html) and submit them.
+Feel free to open an issue if you find a typo or something poorly explained. Spanish speakers can also translate chapters from the [original book](https://jaalonso.github.io/materias/PFconHaskell/temas.html) and submit them.
 
 ## Building
 
