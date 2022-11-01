@@ -1,31 +1,6 @@
 <div class="chapters">
-  $for(chapters)$
-  <div class="chapter">
-    <h1 class="chapter-title">
-      <a href="$url$">
-        $title$
-      </a>
-    </h1>
-    <span class="chapter-date">$date$,
-      $if(author)$
-         Chaptered by $author$
-      $endif$
-    </span>
-
-    $body$
-  </div>
-  $endfor$
-</div>
-
-<div class="pagination">
-  $if(previousPageNum)$
-      <a class="pagination-item newer" href="$previousPageUrl$">Newer</a>
-  $else$
-    <span class="pagination-item newer">Newer</span>
-  $endif$
-  $if(nextPageNum)$
-    <a class="pagination-item older" href="$nextPageUrl$">Older</a>
-  $else$
-    <span class="pagination-item older">Older</span>
-  $endif$
+  <h1 class="chapter-title">
+    Welcome!
+  </h1>
+  <p>$site-title$ is the translation of </p>
 </div>

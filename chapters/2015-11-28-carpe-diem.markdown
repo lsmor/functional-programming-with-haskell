@@ -1,6 +1,7 @@
 ---
 title: Carpe Diem
 tags: lorem, quam
+description: This chapter wants to die.
 ---
 
 Fusce tortor quam, egestas in posuere quis, porttitor vel turpis. Donec

@@ -11,7 +11,9 @@
   <nav class="sidebar-nav">
     <a class="sidebar-nav-item$if(home)$ active$endif$" href="$baseurl$">Home</a>
 
-    <button class="sidebar-nav-button" id="chapter-list">Blogs<i class="fa fa-caret-down"></i></button>
+    <a class="sidebar-nav-item$if(archive)$ active$endif$" href="$baseurl$/book-index.html">Index</a>
+
+    <button class="sidebar-nav-button" id="chapter-list">Chapters<i class="fa fa-caret-down"></i></button>
     
     <div class="dropdown-container">
       $for(list_chapters)$
@@ -26,8 +28,6 @@
         <a class="sidebar-nav-item$if(eval(title))$ active$endif$" href="$baseurl$$node-url$">$title$</a>
       $endif$
     $endfor$
-
-    <a class="sidebar-nav-item$if(archive)$ active$endif$" href="$baseurl$/archive.html">Archive</a>
 
     <a class="sidebar-nav-item" href="$github-repo$">GitHub project</a>
 

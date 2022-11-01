@@ -2,6 +2,7 @@
 title: Rosa Rosa Rosam
 author: Ovidius
 tags: lorem
+description: This chapter has a rose.
 ---
 
 Suspendisse pharetra ullamcorper sem et auctor. Suspendisse vitae tellus eu

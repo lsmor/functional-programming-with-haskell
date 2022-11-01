@@ -4,3 +4,4 @@ _site/
 stack.yaml.lock
 templates/_cache/
 dist-newstyle
+.vscode

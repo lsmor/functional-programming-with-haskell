@@ -4,28 +4,20 @@
         $title$
       </a>
     </h1>
-    <span class="chapter-date">$date$,
-      $if(author)$
-         Chaptered by $author$
-      $endif$
-    </span>
      $body$
 </div>
 
-$if(related_chapters)$
-<div class="related">
-  <h2>Related chapters</h2>
-  <ul class="related-chapters">
-      $for(related_chapters)$
-      <li>
-        <h3>
-          <a href="$url$">
-            $title$
-            <small>$date$</small>
-          </a>
-        </h3>
-      </li>
-    $endfor$
-  </ul>
+<div class="pagination">
+  $if(prev-chapter)$
+    <a class="pagination-item older" href="$prev-chapter$">Previous Chapter</a>
+  $else$
+    <span class="pagination-item older">Previous Chapter</span>
+  $endif$
+  $if(next-chapter)$
+      <a class="pagination-item newer" href="$next-chapter$">Next Chapter</a>
+  $else$
+      <span class="pagination-item newer">Next Chapter</span>
+  $endif$
 </div>
-$endif$
+
+
