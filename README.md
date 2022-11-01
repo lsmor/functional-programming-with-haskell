@@ -1,77 +1,42 @@
-## Lanyon for Hakyll
+# Functional Programming with Haskell
 
-This theme is a port of [Lanyon theme](https://github.com/poole/lanyon) originated by Mark Otto (mdo)
-for Haskell-based static site generator [Hakyll](https://jaspervdj.be/hakyll/) originally written by Jasper Van der Jeugt.
+## Introduction
 
-Few Remarks:
+This online book is a translation of ["Programación Funcional con Haskell"](https://jaalonso.github.io/materias/PFconHaskell/temas.html) by [José A. Alonso Jiménez](https://jaalonso.github.io/) at University of Seville. It is suitable for students with or without prior knowledge in functional programming or progamming in general.
 
-- The code for displaying related chapter is a modified version based on [the blog chapter by Matthew Fitzsimmons](https://www.fitzsimmons.io/chapters/tricks-with-tags-in-hakyll).
-The original version of Lanyon displays only related chapters not tags and the port is following the same.
-- The pagination code is a modified version of [the code by Mike Limansky](https://github.com/limansky/limansky_me/blob/master/src/site.hs).
-- The dynamic sidebar activation is explained in my [blog chapter](https://heuna-kim.net/chapters/2020-11-19-Hakyll-Sidebar-Activation.html).
-- Syntax highlighting is slightly different from the original Lanyon; this repository is using the standard syntax highlighting for Hakyll conforming with `Pandoc` compiler.
+## Site and Theme
 
-### Previews
+- This book is built with [Hakyll](https://jaspervdj.be/hakyll/) originally written by Jasper Van der Jeugt.
+- It uses [Lanyon theme](https://github.com/poole/lanyon) originated by Mark Otto (mdo) and ported to Hakyll by [Heuna Kim]("https://github.com/hahey/lanyon-hakyll")
+- Heuna's original code has been forked and adapted to fit the workflow for this book better
 
-![Preview](https://github.com/hahey/lanyon-hakyll/blob/main/previews/index-sidebar.png?raw=true)
-![Preview](https://github.com/hahey/lanyon-hakyll/blob/main/previews/index.png?raw-true)
+## Contributing
 
-You can find an example website: [my blog](https://heuna-kim.net).
+Feel free to open an issue if you find a typo or something poorly explained. Spanish speaker can also translate chapters from the [original book](https://jaalonso.github.io/materias/PFconHaskell/temas.html) and submit them.
 
-The original website in Jekyll: [Lanyon](https://lanyon.getpoole.com/).
+## Building
 
-### Building the site with stack
-Assuming that you have `stack` installed ([install instruction](https://docs.haskellstack.org/en/stable/install_and_upgrade/)),
+The project is built with cabal. Use `cabal build` to build an executable called `site`. Then run `cabal exec site rebuild` to actually build the site and `cabal exec site watch` to start a http server capable of hot reloading changes in your markdowns and templates.
+
+
+On `vscode` you can create a building task within `.vscode/task.json` (not tested in Windows nor MacOs). If you set it as the default build task you can run it with `Ctrl + Shift + B`
+
+```json
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build and watch site",
+            "type": "shell",
+            "command": "cabal build && cabal exec site rebuild && cabal exec site watch",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
 ```
-$ git clone https://github.com/hahey/lanyon-hakyll.git
-$ cd lanyon-hakyll
-$ stack build
-$ stack exec site clean
-$ stack exec site build
-$ stack exec site watch
-```
-Then you can access the site at `http://localhost:8000` using your browser.
-
-### Customization
-
-#### Meta information
-You can change the following website information in the file `site.hs`.
-
-For the RSS feed:
-```
-feedConfig = FeedConfiguration
-    { feedTitle       = "lanyon-hakyll: Lanyon Theme on Hakyll"
-    , feedDescription = "A Fork of Lanyon based on Poole"
-    , feedAuthorName  = "Heuna Kim"
-    , feedAuthorEmail = "ai@heuna-kim.net"
-    , feedRoot        = "https://github.com/hahey/lanyon-hakyll"
-    }
-```
-For other informations:
-```
-siteCtx :: Context String
-siteCtx =
-    baseCtx `mappend`
-    constField "site_description" "Lanyon Theme on Hakyll" `mappend`
-    constField "site-url" "https://github.com/hahey/lanyon-hakyll" `mappend`
-    constField "tagline" "A Fork of Lanyon based on Poole" `mappend`
-    constField "site-title" "lanyon-hakyll" `mappend`
-    constField "copy-year" "2020" `mappend`
-    constField "github-repo" "https://github.com/hahey/lanyon-hakyll" `mappend`
-    defaultContext
-baseCtx =
-    constField "baseurl" "http://localhost:8000"
-```
-
-You can keep the `baseurl` field for debugging purposes or viewing the site on your local computer but when you publish it, you will need to change it to the domain address of your website.
-
-#### Pages and chapters
-All your files in the `pages` folder will be compiled, listed in the sidebar in an alphabetical order and displayed upon clicking them.
-All your markdown files in the `chapters` folder will be compiled, displayed in the home/index page with the pagination and also listed in the archive page.
-
-#### Color setting
-As in the original theme, add your favorite color theme to the `<body>` element in the `templates/default.html` file, for example:
-```
-<body class="theme-base-0d">
-```
-For the available color theme classes, please look at [the repository of Lanyon](https://github.com/poole/lanyon#themes).
