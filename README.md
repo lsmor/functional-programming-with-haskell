@@ -18,8 +18,7 @@ Feel free to open an issue if you find a typo or something poorly explained. Spa
 
 The project is built with cabal. Use `cabal build` to build an executable called `site`. Then run `cabal exec site rebuild` to actually build the site and `cabal exec site watch` to start a http server capable of hot reloading changes in your markdowns and templates.
 
-
-On `vscode` you can create a building task within `.vscode/task.json` (not tested in Windows nor MacOs). If you set it as the default build task you can run it with `Ctrl + Shift + B`
+On `vscode` you can create a building task within file `.vscode/task.json` (not tested in Windows nor MacOs). If you set it as the default build task you can run it with `Ctrl + Shift + B`
 
 ```json
 {
