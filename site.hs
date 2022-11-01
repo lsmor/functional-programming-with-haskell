@@ -10,7 +10,7 @@ import           Hakyll ((.&&.), (.||.))
 import           Control.Monad                 (liftM, forM_)
 import           System.FilePath               (takeBaseName)
 import           Data.Function (on)
-import qualified Data.Map as Map
+import qualified Data.Map.Strict               as Map
 
 
 main :: IO ()
@@ -36,7 +36,7 @@ main = Hakyll.hakyll $ do
     -- build all markdowns under pages as html files.
     -- It creates the body using the page.html template, then
     -- apply the body to default.html
-    Hakyll.match "pages/*" $ do
+    Hakyll.match ("pages/*" .&&. Hakyll.complement "pages/Home.markdown") $ do
         Hakyll.route $ Hakyll.setExtension "html"
         Hakyll.compile $ do
             pageName <- takeBaseName . Hakyll.toFilePath <$> Hakyll.getUnderlying
@@ -71,7 +71,7 @@ main = Hakyll.hakyll $ do
              case chapter_identifiers of
                [] -> Map.empty
                iden : idens -> Map.fromList (zip idens chapter_identifiers)
-        
+
         Hakyll.compile $ do
             current_iden <- Hakyll.getUnderlying
             let next_chapter_iden = Map.lookup current_iden next_chapter_map
@@ -82,7 +82,7 @@ main = Hakyll.hakyll $ do
                     Nothing   -> pure mempty
                     Just iden -> do
                       iden_route <- Hakyll.getRoute iden
-                      case iden_route of 
+                      case iden_route of
                         Nothing -> pure mempty
                         Just s -> do
                             pure $ Hakyll.constField "next-chapter" (Hakyll.toSiteRoot s <> Hakyll.toUrl s) -- manually use relative url
@@ -92,7 +92,7 @@ main = Hakyll.hakyll $ do
                     Nothing   -> pure mempty
                     Just iden -> do
                       iden_route <- Hakyll.getRoute iden
-                      case iden_route of 
+                      case iden_route of
                         Nothing -> pure mempty
                         Just s -> do
                             pure $ Hakyll.constField "prev-chapter" (Hakyll.toSiteRoot s <> Hakyll.toUrl s)
@@ -116,11 +116,16 @@ main = Hakyll.hakyll $ do
                 >>= embedOnDefaultTemplate
                 >>= Hakyll.relativizeUrls
 
+    -- Adding this line cause error to fail???? 
+    -- Hakyll.match "pages/Home.markdown" do
+    --     Hakyll.compile Hakyll.pandocCompiler
+
+
     -- Create Home Page
-    Hakyll.create ["index.html"] $ do
-        Hakyll.route Hakyll.idRoute
-        Hakyll.compile $ 
-            Hakyll.makeItem ""
+    Hakyll.match "pages/Home*" $ do -- using match pages/Home* goes into infinite loop.
+        Hakyll.route $ Hakyll.constRoute "index.html"
+        Hakyll.compile $
+            Hakyll.pandocCompiler
                 >>= Hakyll.loadAndApplyTemplate "templates/index.html" (siteCtx <> Hakyll.constField "home" "")
                 >>= embedOnDefaultTemplate
                 >>= Hakyll.relativizeUrls
@@ -158,7 +163,7 @@ chapterCtx = Hakyll.defaultContext
 sidebarCtx :: Hakyll.Context String -> Hakyll.Context String
 sidebarCtx nodeCtx =
     Hakyll.listField "list_chapters" nodeCtx (Hakyll.loadAllSnapshots ("chapters/*" .&&. Hakyll.hasNoVersion) "content")
-    <> Hakyll.listField "list_pages" nodeCtx (Hakyll.loadAllSnapshots ("pages/*" Hakyll..&&. Hakyll.hasNoVersion) "page-content")
+    <> Hakyll.listField "list_pages" nodeCtx (Hakyll.loadAllSnapshots ("pages/*" .&&. Hakyll.hasNoVersion .&&. Hakyll.complement "pages/Home.markdown") "page-content")
     <> Hakyll.defaultContext
 
 -- | 
