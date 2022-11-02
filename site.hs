@@ -65,6 +65,7 @@ main = do
 
                 Hakyll.pandocCompiler
                     >>= Hakyll.saveSnapshot "page-content"
+                    >>= Hakyll.applyAsTemplate siteCtx
                     >>= Hakyll.loadAndApplyTemplate "templates/page.html" siteCtx
                     >>= Hakyll.loadAndApplyTemplate "templates/default.html" (activeSidebarCtx <> siteCtx)
                     >>= Hakyll.relativizeUrls
@@ -140,7 +141,6 @@ main = do
 
         -- Create Home Page
         Hakyll.match "pages/Home*" $ do
-            -- using match pages/Home* goes into infinite loop.
             Hakyll.route $ Hakyll.constRoute "index.html"
             Hakyll.compile $
                 Hakyll.pandocCompiler
@@ -152,13 +152,16 @@ main = do
 
 --------------------------------------------------------------------------------
 
+url :: String
+url = fromMaybe "http://localhost:8000" $(includeEnvMaybe "BASE_URL")
+
 -- | This is the context of the whole site.
 siteCtx :: Hakyll.Context String
 siteCtx =
     baseCtx
         `mappend` Hakyll.constField "site_description" "An Introduction to Functional Programming with Haskell"
-        `mappend` Hakyll.constField "site-url" "https://lsmor.github.io/functional-programming-with-haskell/"
-        `mappend` Hakyll.constField "tagline" "Learn Haskell. It is fun!"
+        `mappend` Hakyll.constField "site-url" url
+        `mappend` Hakyll.constField "tagline" "It is fun!"
         `mappend` Hakyll.constField "site-title" "Functional Programming With Haskell"
         `mappend` Hakyll.constField "copy-year" "2022"
         `mappend` Hakyll.constField "github-repo" "https://github.com/lsmor/functional-programming-with-haskell"
@@ -169,9 +172,7 @@ siteCtx =
 -}
 {-# NOINLINE baseCtx #-}
 baseCtx :: Hakyll.Context a
-baseCtx = Hakyll.constField "baseurl" (fromMaybe "http://localhost:8000" url_from_env)
-  where
-    url_from_env = $(includeEnvMaybe "BASE_URL")
+baseCtx = Hakyll.constField "baseurl" url
 
 --------------------------------------------------------------------------------
 
