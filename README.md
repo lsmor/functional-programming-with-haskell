@@ -46,7 +46,7 @@ On `vscode` you can create a building task within file `.vscode/task.json` (not 
 
 ## Deploy
 
-When deploying the site to github we must be sure that some links are pointing to the actual github page instead of localhost. This is done via environment variable `BASE_URL`. This variable is plug into the code _at compile time_ using `include-env` library. This means that a regular build like the one above will set the BASE_URL at `http://localhost:8000` (assuming no `BASE_URL` env-var exists) but when we build for deployement we need to make a clean build and set the env-var to `https://lsmor.github.io/functional-programming-with-haskell/`. 
+When deploying the site to github we must be sure that some links are pointing to the actual github page instead of localhost. This is done via environment variable `BASE_URL`. This variable is plug into the code _at compile time_ using `include-env` library. This means that a regular build like the one above will set the BASE_URL at `http://localhost:8000` (assuming no `BASE_URL` env-var exists) but when we build for deployement we need to make a clean build and set the env-var to `https://lsmor.github.io/functional-programming-with-haskell/`.
 
 The easiest way to creat a `vscode` taks like the one below:
 
