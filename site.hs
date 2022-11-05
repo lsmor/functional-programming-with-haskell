@@ -144,6 +144,7 @@ main = do
             Hakyll.route $ Hakyll.constRoute "index.html"
             Hakyll.compile $
                 Hakyll.pandocCompiler
+                    >>= Hakyll.applyAsTemplate siteCtx
                     >>= Hakyll.loadAndApplyTemplate "templates/index.html" (siteCtx <> Hakyll.constField "home" "")
                     >>= embedOnDefaultTemplate
                     >>= Hakyll.relativizeUrls
@@ -165,6 +166,9 @@ siteCtx =
         `mappend` Hakyll.constField "site-title" "Functional Programming With Haskell"
         `mappend` Hakyll.constField "copy-year" "2022"
         `mappend` Hakyll.constField "github-repo" "https://github.com/lsmor/functional-programming-with-haskell"
+        `mappend` Hakyll.constField "github-user" "https://github.com/lsmor"
+        `mappend` Hakyll.constField "github-original-repo" "https://jaalonso.github.io/materias/PFconHaskell/temas.html"
+        `mappend` Hakyll.constField "github-original-user" "https://jaalonso.github.io/"
         `mappend` Hakyll.defaultContext
 
 {- | This context contains the base url.
