@@ -2,7 +2,7 @@
 title: About
 ---
 
-This book is translated by [Luis Morillo Najarro](https://github.com/lsmor) with permission of the original author [José A. Alonso Jiménez](https://jaalonso.github.io/) who was Luis' professor while he was studing at the University of Sevilla
+This book is translated by [Luis Morillo Najarro]($github-user$) with permission of the original author [José A. Alonso Jiménez]($github-original-user$) who was Luis' professor while he was studing at the University of Sevilla
 
 Especial thanks to:
 

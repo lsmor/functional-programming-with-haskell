@@ -14,12 +14,17 @@ import Hakyll ((.&&.), (.||.))
 import qualified Hakyll
 import IncludeEnv.TH (includeEnvMaybe)
 import System.FilePath (takeBaseName)
-
+import qualified Text.Pandoc.Definition as Pandoc
+import qualified Text.Pandoc.Walk as Pandoc
+--import Text.Pandoc.Writers (writeIpynb)
+import qualified Text.Pandoc as Pandoc
+import Text.Pandoc.Definition (Pandoc)
+import qualified Data.Text as Text
 
 {-
  I don't know how Hakyll works and I had a long time tweaking the original Heuna's code to fit my workflow
- It is very unstable code. For example, uncommenting line 122 causes an error compiling 404.md, which is
- completely unrelated (line 32).
+ It is very unstable code. For example, uncommenting line 151 causes an error compiling 404.md, which is
+ completely unrelated (line 51).
 
  Also matching "page/*" makes an infinite loop unless we exclude Home.markdown.
 
@@ -69,6 +74,14 @@ main = do
                     >>= Hakyll.loadAndApplyTemplate "templates/page.html" siteCtx
                     >>= Hakyll.loadAndApplyTemplate "templates/default.html" (activeSidebarCtx <> siteCtx)
                     >>= Hakyll.relativizeUrls
+
+        -- try literate haskell
+        Hakyll.match "chapters/*.lhs" $ Hakyll.version "notebooks" $ do
+            Hakyll.route $ Hakyll.gsubRoute "chapters" (const "downloads") `Hakyll.composeRoutes` Hakyll.setExtension "ipynb"
+            Hakyll.compile $ do
+                Hakyll.getResourceString
+                 >>= Hakyll.readPandoc
+                 >>= writeJupyter
 
         -- Don't really know why or how this works... Just matching the types
         -- We use Hakyll.getMatches to get the list of chapters (I don't know if it reads from the folder, or from in-memory store)
@@ -217,3 +230,23 @@ getMetadataKey [key] item = Hakyll.getMetadataField' (Hakyll.itemIdentifier item
 
 embedOnDefaultTemplate :: Hakyll.Item String -> Hakyll.Compiler (Hakyll.Item String)
 embedOnDefaultTemplate = Hakyll.loadAndApplyTemplate "templates/default.html" (baseSidebarCtx <> siteCtx)
+
+
+-- Stuff to write literate haskell as jupyter notebook
+
+-- | Takes an item with the Pandoc AST and produces a compiler of the jupyter notebook associated. (as a String)
+writeJupyter :: Hakyll.Item Pandoc -> Hakyll.Compiler (Hakyll.Item String)
+writeJupyter item = case Pandoc.runPure (Pandoc.writeIpynb Pandoc.def jupyter_raw) of
+  Left pe -> error $ show pe
+  Right txt -> return $ Text.unpack txt <$ item
+ where jupyter_raw = toJupyter $ Hakyll.itemBody item
+
+-- | This just handles some details on how lhs -> jupyter should work.
+transformer :: Pandoc.Block -> Pandoc.Block
+transformer (Pandoc.CodeBlock (idents, classes, dict) txt) = Pandoc.CodeBlock (idents, ["code"], dict) txt
+transformer e = e
+
+toJupyter :: Pandoc -> Pandoc
+toJupyter = Pandoc.walk transformer
+
+

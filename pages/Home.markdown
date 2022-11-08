@@ -2,7 +2,7 @@
 title: Home
 ---
 
-This online book is a translation of ["Programación Funcional con Haskell"](https://jaalonso.github.io/materias/PFconHaskell/temas.html) by [José A. Alonso Jiménez](https://jaalonso.github.io/) at University of Seville. It is suitable for students with or without prior knowledge in functional programming or progamming in general. This book is separated in two parts:
+This online book is a translation of ["Programación Funcional con Haskell"]($github-original-repo$) by [José A. Alonso Jiménez]($github-original-user$) at University of Seville. It is suitable for students with or without prior knowledge in functional programming or progamming in general. This book is separated in two parts:
 
 - The one you are reading: containing examples and theory
 - A companion set of exercises to be solved by yourself. TODO: add link to exercises

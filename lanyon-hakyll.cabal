@@ -18,5 +18,8 @@ executable site
                   , containers
                   , filepath
                   , include-env >= 0.5.0.0
+                  , pandoc-types ^>= 1.22
+                  , pandoc ^>= 2.19
+                  , text
   ghc-options:      -threaded
   default-language: Haskell2010
