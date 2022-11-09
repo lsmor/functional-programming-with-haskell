@@ -13,7 +13,7 @@ import Data.Ord (comparing)
 import Hakyll ((.&&.), (.||.))
 import qualified Hakyll
 import IncludeEnv.TH (includeEnvMaybe)
-import System.FilePath (takeBaseName)
+import System.FilePath (takeBaseName, takeFileName, (</>), (<.>))
 import qualified Text.Pandoc.Definition as Pandoc
 import qualified Text.Pandoc.Walk as Pandoc
 --import Text.Pandoc.Writers (writeIpynb)
@@ -129,9 +129,11 @@ main = do
                                 Just s -> do
                                     pure $ Hakyll.constField "prev-chapter" (Hakyll.toSiteRoot s <> Hakyll.toUrl s)
 
+                let download_ctx = Hakyll.constField "download-chapter" $ "/downloads" </> takeBaseName (Hakyll.toFilePath current_iden) <.> "ipynb"
+
                 Hakyll.pandocCompiler
                     >>= Hakyll.saveSnapshot "content"
-                    >>= Hakyll.loadAndApplyTemplate "templates/chapter.html" (chapterCtx <> ctx_next <> ctx_prev)
+                    >>= Hakyll.loadAndApplyTemplate "templates/chapter.html" (chapterCtx <> ctx_next <> ctx_prev <> download_ctx)
                     >>= embedOnDefaultTemplate
                     >>= Hakyll.relativizeUrls
 

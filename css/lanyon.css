@@ -592,3 +592,26 @@ a.pagination-item:hover {
 .layout-reverse.sidebar-overlay #sidebar-checkbox:checked ~ .sidebar {
   box-shadow: -.25rem 0 .5rem rgba(0,0,0,.1);
 }
+
+
+/*
+Download button
+
+copy-pasted from https://www.w3schools.com/howto/howto_css_download_button.asp
+
+*/
+
+/* Style buttons */
+.btn {
+  background-color: rgb(103, 174, 244);
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: rgb(70, 114, 245);
+}
