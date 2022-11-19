@@ -17,7 +17,7 @@
     
     <div class="dropdown-container">
       $for(list_chapters)$
-        <a class="sidebar-nav-item$if(eval(title))$ active$endif$" href="$node-url$">$title$</a>
+        <a class="sidebar-nav-item$if(eval(title))$ active$endif$" href="$baseurl$$node-url$"><i class="fa fa-book"></i> $if(chapter-num)$ $chapter-num$ - $endif$$title$</a>
       $endfor$
     </div>
 

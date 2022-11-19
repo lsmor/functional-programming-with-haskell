@@ -2,6 +2,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeApplications #-}
 
 import Control.Monad (forM_, liftM)
 import Data.Function (on)
@@ -20,6 +21,7 @@ import qualified Text.Pandoc.Walk as Pandoc
 import qualified Text.Pandoc as Pandoc
 import Text.Pandoc.Definition (Pandoc)
 import qualified Data.Text as Text
+import Control.Monad.IO.Class (liftIO)
 
 {-
  I don't know how Hakyll works and I had a long time tweaking the original Heuna's code to fit my workflow
@@ -33,6 +35,7 @@ import qualified Data.Text as Text
 
  For sure I am doing something wrong but I don't know what. If you are touching this code, be sure you know what you are doing.
 -}
+
 main :: IO ()
 main = do
     Hakyll.hakyllWith Hakyll.defaultConfiguration{Hakyll.destinationDirectory = "docs"} $ do
@@ -75,11 +78,12 @@ main = do
                     >>= Hakyll.loadAndApplyTemplate "templates/default.html" (activeSidebarCtx <> siteCtx)
                     >>= Hakyll.relativizeUrls
 
-        -- try literate haskell
+        -- Build literate haskell files as notebooks
         Hakyll.match "chapters/*.lhs" $ Hakyll.version "notebooks" $ do
             Hakyll.route $ Hakyll.gsubRoute "chapters" (const "downloads") `Hakyll.composeRoutes` Hakyll.setExtension "ipynb"
             Hakyll.compile $ do
                 Hakyll.getResourceString
+                 >>= Hakyll.applyAsTemplate (Hakyll.constField "baseurl" "." <> siteCtx)
                  >>= Hakyll.readPandoc
                  >>= writeJupyter
 
@@ -133,6 +137,7 @@ main = do
 
                 Hakyll.pandocCompiler
                     >>= Hakyll.saveSnapshot "content"
+                    >>= Hakyll.applyAsTemplate siteCtx
                     >>= Hakyll.loadAndApplyTemplate "templates/chapter.html" (chapterCtx <> ctx_next <> ctx_prev <> download_ctx)
                     >>= embedOnDefaultTemplate
                     >>= Hakyll.relativizeUrls
@@ -166,6 +171,7 @@ main = do
 
         Hakyll.match "templates/*" $ Hakyll.compile Hakyll.templateBodyCompiler
 
+
 --------------------------------------------------------------------------------
 
 url :: String
@@ -173,18 +179,17 @@ url = fromMaybe "http://localhost:8000" $(includeEnvMaybe "BASE_URL")
 
 -- | This is the context of the whole site.
 siteCtx :: Hakyll.Context String
-siteCtx =
-    baseCtx
-        `mappend` Hakyll.constField "site_description" "An Introduction to Functional Programming with Haskell"
-        `mappend` Hakyll.constField "site-url" url
-        `mappend` Hakyll.constField "tagline" "It is fun!"
-        `mappend` Hakyll.constField "site-title" "Functional Programming With Haskell"
-        `mappend` Hakyll.constField "copy-year" "2022"
-        `mappend` Hakyll.constField "github-repo" "https://github.com/lsmor/functional-programming-with-haskell"
-        `mappend` Hakyll.constField "github-user" "https://github.com/lsmor"
-        `mappend` Hakyll.constField "github-original-repo" "https://jaalonso.github.io/materias/PFconHaskell/temas.html"
-        `mappend` Hakyll.constField "github-original-user" "https://jaalonso.github.io/"
-        `mappend` Hakyll.defaultContext
+siteCtx = baseCtx
+       <> Hakyll.constField "site_description" "An Introduction to Functional Programming with Haskell"
+       <> Hakyll.constField "site-url" url
+       <> Hakyll.constField "tagline" "It is fun!"
+       <> Hakyll.constField "site-title" "Functional Programming With Haskell"
+       <> Hakyll.constField "copy-year" "2022"
+       <> Hakyll.constField "github-repo" "https://github.com/lsmor/functional-programming-with-haskell"
+       <> Hakyll.constField "github-user" "https://github.com/lsmor"
+       <> Hakyll.constField "github-original-repo" "https://jaalonso.github.io/materias/PFconHaskell/temas.html"
+       <> Hakyll.constField "github-original-user" "https://jaalonso.github.io/"
+       <> Hakyll.defaultContext
 
 {- | This context contains the base url.
    use http://localhost:8000 for local dev.
@@ -213,9 +218,9 @@ sidebarCtx nodeCtx =
 -- |
 baseNodeCtx :: Hakyll.Context String
 baseNodeCtx =
-    Hakyll.urlField "node-url"
-        `mappend` Hakyll.titleField "title"
-        `mappend` baseCtx
+    Hakyll.urlField "node-url" <> baseCtx <> Hakyll.metadataField
+        -- `mappend` Hakyll.titleField "title"
+        
 
 baseSidebarCtx :: Hakyll.Context String
 baseSidebarCtx = sidebarCtx baseNodeCtx
@@ -238,17 +243,23 @@ embedOnDefaultTemplate = Hakyll.loadAndApplyTemplate "templates/default.html" (b
 
 -- | Takes an item with the Pandoc AST and produces a compiler of the jupyter notebook associated. (as a String)
 writeJupyter :: Hakyll.Item Pandoc -> Hakyll.Compiler (Hakyll.Item String)
-writeJupyter item = case Pandoc.runPure (Pandoc.writeIpynb Pandoc.def jupyter_raw) of
-  Left pe -> error $ show pe
-  Right txt -> return $ Text.unpack txt <$ item
+writeJupyter item = do 
+  pandoc_result <- Hakyll.unsafeCompiler $ Pandoc.runIO (Pandoc.writeIpynb Pandoc.def jupyter_raw)
+  case pandoc_result of 
+    Left pe -> error $ show pe
+    Right txt -> return $ Text.unpack txt <$ item
  where jupyter_raw = toJupyter $ Hakyll.itemBody item
 
 -- | This just handles some details on how lhs -> jupyter should work.
-transformer :: Pandoc.Block -> Pandoc.Block
-transformer (Pandoc.CodeBlock (idents, classes, dict) txt) = Pandoc.CodeBlock (idents, ["code"], dict) txt
-transformer e = e
+codeBlockAttrChange :: Pandoc.Block -> Pandoc.Block
+codeBlockAttrChange (Pandoc.CodeBlock (idents, classes, dict) txt) = Pandoc.CodeBlock (idents, ["code"], dict) txt
+codeBlockAttrChange e = e
+
+imageToLink :: Pandoc.Block -> Pandoc.Block
+imageToLink (Pandoc.Para (Pandoc.Image attrs inl target:is)) = Pandoc.Para $ Pandoc.Str "!":Pandoc.Link attrs inl target:is
+imageToLink i = i
 
 toJupyter :: Pandoc -> Pandoc
-toJupyter = Pandoc.walk transformer
+toJupyter = Pandoc.walk codeBlockAttrChange
 
 
