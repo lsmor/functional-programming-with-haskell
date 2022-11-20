@@ -66,6 +66,7 @@ circunference = circle 3
 === Plot a Solid Circle
 
 - **Example**: A program which plots a circle of radious 3
+
 ![]($baseurl$/images/solidcircle.png)
 
 
@@ -90,6 +91,7 @@ dot = solidCircle 3
 === Plot of the Coordinate Plane
 
 - **Example**: A program which plots the coordinate plane
+
 ![]($baseurl$/images/coordinatePlane.png)
 
 - **Program**:
@@ -113,6 +115,7 @@ plane = coordinatePlane
 === Plot Some Rectangles
 
 - **Example**: plot a basic rectangle
+
 ![]($baseurl$/images/rectangle.png)
 
 - **Program**:
@@ -133,6 +136,7 @@ rect = rectangle 6 3
   - function `rectangle :: Double -> Double -> Picture` takes two `Double`s (base and height) and produces a `Picture`
 
 - **Example**: modify previous example to produce a thicker rectangle
+
 ![]($baseurl$/images/thickrectangle.png)
 
 - **Program**:
@@ -153,6 +157,7 @@ rect = thickRectangle 0.5 6 3
    - function `thickRectangle :: Double -> Double -> Double -> Picture` takes three `Double`s (thickness, base and height) and produces a `Picture`
 
 - **Example**: modify previous example to produce a solid rectangle
+
 ![]($baseurl$/images/solidRectangle.png)
 
 - **Program**:
@@ -175,6 +180,7 @@ rect = solidRectangle 6 3
 === Plot Paths
 
 - **Example**: A program which draws a path passing through points (-3,3), (3,3), (-3,-3) and (3,-3)
+
 ![]($baseurl$/images/openPath.png)
 
 - **Program**:
@@ -196,6 +202,7 @@ openPath = polyline [(-3,3),(3,3),(-3,-3),(3,-3)]
    - A point is just a pair of `Double`s. In Haskell you can define a type synonym with the `type` keyword: `type Point = (Double, Double)`
 
 - **Example**: A program which draws a closed path passing through points (-9,-9), (0,9) and (9,-9) forming a rectangle.
+
 ![]($baseurl$/images/closedPath.png)
 
 - **Program**:
